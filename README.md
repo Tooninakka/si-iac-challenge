@@ -44,27 +44,25 @@ Terraform state should be stored in an S3 backend with a DynamoDB lock table (a 
 	2.	terraform init  # or use backend config to point to your S3 backend
 	3.	terraform apply (accept plan) — this will package ../lambda as a zip, create resources and output the API endpoint.
 
-After apply completes, the api_endpoint output contains the URL. GET that URL to invoke the Lambda, which returns the list of objects in the bucket.
+After "terraform apply" completes, the api_endpoint output contains the URL. GET that URL to invoke the Lambda, which returns the list of objects in the bucket.
 
 **Explanation/justification - GitHub Actions:**
 	•	PR runs plan + security scans (tfsec). That provides validation and prevents insecure or misconfigured infra from being merged.
 	•	apply runs only on main and uses a protected production environment — GitHub environments support required reviewers and checks which implement a manual approval gate (this satisfies the requirement for approval & rollback control).
 
-CI/CD: Rollback & Validation strategy
+**CI/CD: Rollback & Validation strategy**
 
-Validation (pre-deploy / PR):
+**Validation (pre-deploy / PR):**
 	•	terraform validate, terraform fmt (style), tfsec (security), optional checkov and tflint.
 	•	Integration tests (optional): run a small integration harness that calls the API endpoint in a staging environment.
 
-Apply & Approval:
-	•	Protect production environment in GitHub. Require at least one approver before the apply job runs.
+**Apply & Approval:**
+	•	Protect the production environment in GitHub. Require at least one approver before the apply job runs.
 	•	Apply uses the previously generated tfplan artifact (so the exact planned change is applied).
 
-Rollback:
-	•	Terraform state is the source of truth. If a deploy causes a regression, rollback is done by checking out the previous commit (the last known good), re-running the pipeline (which will create a plan that returns infra to the previous state) and applying that plan.
-	•	Additionally: enable S3 backend versioning and keep copies of state file; Terraform Cloud (if you choose) or S3 versioning retains prior states so you can restore to a previous state if needed.
-
-⸻
+**Rollback:**
+	•	Terraform state is the source of truth. If a deploy causes a regression, rollback is done by checking out the previous commit (the last known good), re-running the pipeline (which will create a plan that 			returns infra to the previous state) and applying that plan.
+	•	Additionally: enable S3 backend versioning and keep copies of the state file; Terraform Cloud (if you choose) or S3 versioning retains prior states so you can restore to a previous state if needed.
 
 **Observability & Alerting**
 
@@ -104,4 +102,5 @@ Rollback:
 	•	Run a privileged IAM review and rotate any long-lived credentials; prefer short-lived roles via OIDC for CI.
 
  
+
 

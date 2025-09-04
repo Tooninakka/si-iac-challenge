@@ -1,4 +1,4 @@
-**IaC Implementation**
+******IaC Implementation******
 
 **Repositoey: si-iac-challenge**
 
@@ -84,15 +84,15 @@ After "terraform apply" completes, the api_endpoint output contains the URL. GET
 	•	Use alert suppression and on-call escalation rules (SNS -> PagerDuty) to avoid pager fatigue.
 
 
-**Security considerations** (what was implemented + recommendations)
+******Security considerations**** **(what was implemented + recommendations)
 
-**Implemented/considered in the code:**
+****Implemented/considered in the code:****
 	•	S3 bucket defaulted to private, with public access block and server-side encryption (SSE-S3).
 	•	Lambda IAM role uses least privilege (only ListBucket/GetObject on the target bucket + logging & X-Ray perms).
 	•	CloudWatch Log retention is set (to avoid indefinite log retention).
 	•	CI pipeline includes tfsec security scanning as a gate.
 
-**Recommended additional hardening:**
+****Recommended additional hardening:****
 	•	Use KMS-managed CMKs to encrypt sensitive resources (S3 bucket and state), and enable key rotation.
 	•	Put Terraform state in S3 with DynamoDB locking and S3 encryption + bucket policy to restrict access.
 	•	Enable AWS Config, GuardDuty, and IAM Access Analyser to detect drift and suspicious activity.
@@ -102,5 +102,6 @@ After "terraform apply" completes, the api_endpoint output contains the URL. GET
 	•	Run a privileged IAM review and rotate any long-lived credentials; prefer short-lived roles via OIDC for CI.
 
  
+
 
 

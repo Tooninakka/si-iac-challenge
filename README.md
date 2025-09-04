@@ -84,7 +84,7 @@ After "terraform apply" completes, the api_endpoint output contains the URL. GET
 	•	Use alert suppression and on-call escalation rules (SNS -> PagerDuty) to avoid pager fatigue.
 
 
-******Security considerations**** **(what was implemented + recommendations)
+****Security considerations**** (what was implemented + recommendations)
 
 ****Implemented/considered in the code:****
 	•	S3 bucket defaulted to private, with public access block and server-side encryption (SSE-S3).
@@ -102,6 +102,7 @@ After "terraform apply" completes, the api_endpoint output contains the URL. GET
 	•	Run a privileged IAM review and rotate any long-lived credentials; prefer short-lived roles via OIDC for CI.
 
  
+
 
 
 
